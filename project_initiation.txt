@@ -1,0 +1,21 @@
+1. tạo 2 thư mục backend/frontend
+
+2. trong thư mục frontend:
+    2.1. khởi tạo
+    -   npm create vite@latest
+    -   chọn react
+    -   chọn javascript
+
+    2.2. cài thư viện
+    -   npm íntall
+    -   npm run dev (chạy thử)
+
+3. trong thư mục backend
+    3.1. khởi tạo package.json
+    -   npm init -y
+
+    3.2. cài thư viện
+    -   npm install express mongoose dotenv jsonwebtoken bcryptjs cookie-parser cloudinary socket.io
+    
+    3.3. cài auto run vào thư mục backend
+    -   npm i nodemon -D (trong package.json đc lưu riêng chỉ dành cho dev)
