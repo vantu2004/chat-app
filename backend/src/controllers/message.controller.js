@@ -1,0 +1,70 @@
+import User from "../models/user.model.js";
+import Message from "../models/message.model.js";
+import cloudinary from "../lib/cloudinary.js";
+
+export const getUsers = async (req, res) => {
+  try {
+    const loggedInUserId = req.user._id;
+    // $ne: not equal
+    const users = await User.find({ _id: { $ne: loggedInUserId } }).select(
+      "-password"
+    );
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Server error",
+    });
+  }
+};
+
+export const getConversation = async (req, res) => {
+  try {
+    const { receiverId } = req.params;
+    const senderId = req.user._id;
+
+    const messages = await Message.find({
+      $or: [
+        { senderId: senderId, receiverId: receiverId },
+        { senderId: receiverId, receiverId: senderId },
+      ],
+    }).sort({
+      createdAt: 1,
+    });
+    res.status(200).json(messages);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Server error",
+    });
+  }
+};
+
+export const sendMessage = async (req, res) => {
+  try {
+    const { receiverId } = req.body;
+    const senderId = req.user._id;
+    const { text, image } = req.body;
+
+    let imageUrl;
+    if (image) {
+      const uploadResponse = await cloudinary.uploader.upload(req.file.path);
+      imageUrl = uploadResponse.secure_url;
+    }
+
+    const message = await Message.create({
+      senderId,
+      receiverId,
+      text,
+      image: imageUrl,
+    });
+
+    res.status(201).json(message);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Server error",
+    });
+  }
+};

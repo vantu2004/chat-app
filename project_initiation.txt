@@ -7,8 +7,27 @@
     -   chọn javascript
 
     2.2. cài thư viện
-    -   npm íntall
+    -   npm install
     -   npm run dev (chạy thử)
+
+    2.3. Quản lý điều hướng (routing) trong ứng dụng React
+    -   npm i react-router-dom
+
+    2.4. Hiển thị thông báo dạng toast (popup nhỏ) trên giao diện.
+    -   npm i react-hot-toast
+
+    2.5. Cài Tailwind CSS - v4.1
+    -   npm install tailwindcss @tailwindcss/vite
+    -   cài thêm extention Tailwind
+
+    2.6. Cài daisyUI (giống chakraUI)
+    -   npm i -D daisyui@latest
+
+    2.7. Cài thư viện call API & global variable
+    -   npm i axios zustand
+
+    2.8. Cài thư viện React-Icons
+    -   npm install react-icons --save
 
 3. trong thư mục backend
     3.1. khởi tạo package.json
@@ -19,3 +38,6 @@
     
     3.3. cài auto run vào thư mục backend
     -   npm i nodemon -D (trong package.json đc lưu riêng chỉ dành cho dev)
+
+    3.4. cấu hình BE trả về các header để browser cho phép pass CORS
+    -   npm i cor
