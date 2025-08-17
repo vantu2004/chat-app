@@ -7,6 +7,7 @@ import SettingsPage from "./pages/SettingsPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import { useEffect } from "react";
 import { userAuthStore } from "./store/userAuthStore.js";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = userAuthStore();
@@ -14,8 +15,6 @@ const App = () => {
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
-
-  console.log(authUser);
 
   if (isCheckingAuth && !authUser)
     return (
@@ -46,8 +45,13 @@ const App = () => {
 
         <Route path="/settings" element={<SettingsPage />} />
 
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route
+          path="/profile"
+          element={authUser ? <ProfilePage /> : <Navigate to="/" />}
+        />
       </Routes>
+
+      <Toaster position="top-center" reverseOrder={false} />
     </div>
   );
 };

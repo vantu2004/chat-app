@@ -9,9 +9,10 @@ import cor from "cors";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 // middleware giúp Express đọc và parse cookie từ request vào req.cookies
 app.use(cookieParser());
 app.use(
