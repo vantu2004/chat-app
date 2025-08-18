@@ -1,15 +1,17 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
+import { useChatStore } from "./useChatStore.js";
 
-export const userAuthStore = create((set) => ({
+export const useAuthStore = create((set) => ({
   authUser: null,
 
   isSigningUp: false,
   isLoggingIn: false,
   isUpdating: false,
-
   isCheckingAuth: true,
+
+  onlineUsers: [],
 
   checkAuth: async () => {
     try {
@@ -56,6 +58,10 @@ export const userAuthStore = create((set) => ({
     try {
       await axiosInstance.get("/auth/logout");
       set({ authUser: null });
+
+      // khi logout thì reset selectedUser trong useChatStore để tránh login đúng tài khoản người đó thì auto mở chat với người đó -> lỗi logic
+      useChatStore.getState().reset();
+
       toast.success("Logout success");
     } catch (error) {
       console.log(error);

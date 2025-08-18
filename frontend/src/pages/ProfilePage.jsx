@@ -1,10 +1,10 @@
 import { FaCamera, FaUser, FaEnvelope } from "react-icons/fa";
-import { userAuthStore } from "../store/userAuthStore.js";
+import { useAuthStore } from "../store/useAuthStore.js";
 import { FaUserCircle } from "react-icons/fa";
 import { useRef } from "react";
 
 const ProfilePage = () => {
-  const { authUser, isUpdating, update } = userAuthStore();
+  const { authUser, isUpdating, update } = useAuthStore();
   // tạo một ref (reference) trỏ thẳng tới input file
   const fileInputRef = useRef(null);
 
@@ -26,7 +26,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200 p-6">
+    <div className="h-full flex items-center justify-center bg-base-200 p-6">
       <div className="w-full max-w-2xl card bg-base-100 shadow-2xl rounded-2xl overflow-hidden">
         <div className="card-body p-8">
           {/* Header */}

@@ -43,13 +43,13 @@ export const getConversation = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
   try {
-    const { receiverId } = req.body;
+    const { receiverId } = req.params; // lấy từ URL
+    const { text, image } = req.body; // lấy từ body
     const senderId = req.user._id;
-    const { text, image } = req.body;
 
     let imageUrl;
     if (image) {
-      const uploadResponse = await cloudinary.uploader.upload(req.file.path);
+      const uploadResponse = await cloudinary.uploader.upload(image);
       imageUrl = uploadResponse.secure_url;
     }
 

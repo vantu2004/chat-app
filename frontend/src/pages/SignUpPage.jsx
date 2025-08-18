@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { userAuthStore } from "../store/userAuthStore.js";
+import { useAuthStore } from "../store/useAuthStore.js";
 import { Link } from "react-router-dom";
 import AuthImagePattern from "../components/AuthImagePattern.jsx";
 import toast from "react-hot-toast";
@@ -11,7 +11,7 @@ const SignUpPage = () => {
     password: "",
   });
 
-  const { isSigningUp, signup } = userAuthStore();
+  const { isSigningUp, signup } = useAuthStore();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -58,7 +58,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-base-200">
+    <div className="h-full w-full flex flex-col lg:flex-row bg-base-200">
       {/* Left Panel */}
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="card w-full max-w-lg shadow-2xl bg-base-100 rounded-2xl">
@@ -77,7 +77,7 @@ const SignUpPage = () => {
                 <input
                   type="text"
                   name="fullname"
-                  placeholder="fullname"
+                  placeholder="Full Name"
                   value={form.fullname}
                   onChange={handleChange}
                   className="grow bg-transparent outline-none text-base-content"

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { userAuthStore } from "../store/userAuthStore.js";
+import { useAuthStore } from "../store/useAuthStore.js";
 import { MdOutlineMarkChatUnread } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa6";
 import { CiSettings } from "react-icons/ci";
@@ -8,7 +8,7 @@ import { IoIosLogOut } from "react-icons/io";
 import { CiUser } from "react-icons/ci";
 
 const Navbar = () => {
-  const { authUser, logout } = userAuthStore();
+  const { authUser, logout } = useAuthStore();
 
   return (
     <div className="navbar bg-base-100 shadow-md px-6 sticky top-0 z-50">
@@ -44,7 +44,9 @@ const Navbar = () => {
 
         {/* Settings */}
         <button className="btn btn-ghost btn-circle hover:bg-base-200 transform transition hover:scale-110">
-          <CiSettings size={22} />
+          <Link to="/settings" title="Settings">
+            <CiSettings size={22} />
+          </Link>
         </button>
 
         {authUser ? (

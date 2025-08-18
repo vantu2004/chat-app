@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { userAuthStore } from "../store/userAuthStore.js";
+import { useAuthStore } from "../store/useAuthStore.js";
 import { Link } from "react-router-dom";
 import AuthImagePattern from "../components/AuthImagePattern.jsx";
 import toast from "react-hot-toast";
@@ -10,7 +10,7 @@ const LoginPage = () => {
     password: "",
   });
 
-  const { isLoggingIn, login } = userAuthStore();
+  const { isLoggingIn, login } = useAuthStore();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -51,7 +51,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col lg:flex-row bg-base-200">
+    <div className="h-full w-full flex flex-col lg:flex-row bg-base-200">
       {/* Left panel: Image */}
       <AuthImagePattern />
 
