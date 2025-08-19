@@ -1,0 +1,15 @@
+1. Tạo file package.json chung cho cả project
+    - npm init -y (auto set mặc định)
+
+2. Bổ sung lệnh trong package.json của /backend
+    - "start": "node src/index.js"
+
+3. Chú ý file .gitignore
+
+4. Bổ sung lệnh trong package.json chung
+    - "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    - "start": "npm run start --prefix backend"
+
+5. Trong index.js ở backend, thêm path... để trỏ đến index.html và các file tĩnh trong frontend khi dùng React Router/Vite
+
+6. Chỉnh lại BASE_URL trong file axios.js và useAuthStore.js
