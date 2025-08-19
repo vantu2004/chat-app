@@ -5,10 +5,10 @@ import connectDB from "./lib/db.js";
 import cookieParser from "cookie-parser";
 import messageRoutes from "./routes/message.route.js";
 import cor from "cors";
+import { app, server } from "./lib/socket.js";
 
 dotenv.config();
 
-const app = express();
 const PORT = process.env.PORT;
 
 app.use(express.json({ limit: "10mb" }));
@@ -25,7 +25,8 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/message", messageRoutes);
 
-app.listen(PORT, () => {
+// nếu dùng app thì express tự tạo 1 http server r gắn app vào để xử lý các request HTTP bình thường, còn server này đã đc cấu hình là http server gốc
+server.listen(PORT, () => {
   console.log(`Server started on PORT ${PORT}`);
   connectDB();
 });

@@ -29,6 +29,9 @@
     2.8. Cài thư viện React-Icons
     -   npm install react-icons --save
 
+    2.9. Cài thư viện socket cho client
+    -   npm i socket.io-client
+
 3. trong thư mục backend
     3.1. khởi tạo package.json
     -   npm init -y

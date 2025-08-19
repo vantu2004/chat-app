@@ -4,30 +4,41 @@ import { FaUserCircle } from "react-icons/fa";
 import NoMessagePlaceholder from "./NoMessagePlaceholder.jsx";
 import ChatSkeleton from "./ChatSkeleton.jsx";
 import { useAuthStore } from "../../store/useAuthStore.js";
-
-const formatTime = (time) => {
-  if (!time) return "";
-  try {
-    const date = new Date(time);
-    return date.toLocaleTimeString("vi-VN", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  } catch {
-    return time;
-  }
-};
+import { useRef } from "react";
+import { formatTime } from "../../lib/formatTime.js";
 
 const ChatContainerMessage = () => {
-  const { selectedUser, messages, getMessage, isMessageLoading } =
-    useChatStore();
+  const {
+    selectedUser,
+    messages,
+    getMessage,
+    isMessageLoading,
+    subscribeToNewMessage,
+    unsubscribeToNewMessage,
+  } = useChatStore();
   const { authUser } = useAuthStore();
+  const bottomRef = useRef(null);
 
   useEffect(() => {
     if (selectedUser) {
       getMessage(selectedUser._id);
     }
-  }, [selectedUser, getMessage]);
+
+    subscribeToNewMessage();
+
+    // cleanup function → chạy khi component unmount hoặc trước khi chạy lại effect (khi selectedUser đổi) để gỡ bỏ listener cũ
+    return () => unsubscribeToNewMessage();
+  }, [
+    selectedUser,
+    getMessage,
+    subscribeToNewMessage,
+    unsubscribeToNewMessage,
+  ]);
+
+  // mỗi khi messages thay đổi thì scroll xuống cuối
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-5 scrollbar-thin scrollbar-thumb-base-300">
@@ -84,7 +95,7 @@ const ChatContainerMessage = () => {
                       : "text-primary/80 text-right"
                   }`}
                 >
-                  {formatTime(msg.createdAt || msg.time)}
+                  {formatTime(msg.createdAt)}
                 </span>
               </div>
 
@@ -103,6 +114,9 @@ const ChatContainerMessage = () => {
           );
         })
       )}
+
+      {/* mốc để auto scroll */}
+      <div ref={bottomRef} />
     </div>
   );
 };

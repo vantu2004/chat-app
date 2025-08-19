@@ -1,6 +1,8 @@
 import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
 import cloudinary from "../lib/cloudinary.js";
+import { getReceiverSocketId } from "../lib/socket.js";
+import { io } from "../lib/socket.js";
 
 export const getUsers = async (req, res) => {
   try {
@@ -59,6 +61,12 @@ export const sendMessage = async (req, res) => {
       text,
       image: imageUrl,
     });
+
+    // dựa theo receiverId từ URL lấy receiverSocketId tại userSocketMap trong socket.js, dựa vào receiverSocketId để gửi message
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", message);
+    }
 
     res.status(201).json(message);
   } catch (error) {

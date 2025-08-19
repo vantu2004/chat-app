@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
+import { useAuthStore } from "./useAuthStore.js";
 
 export const useChatStore = create((set, get) => ({
   messages: [],
@@ -55,4 +56,28 @@ export const useChatStore = create((set, get) => ({
   setSelectedUser: (user) => set({ selectedUser: user }),
 
   reset: () => set({ selectedUser: null }),
+
+  subscribeToNewMessage: () => {
+    if (!get().selectedUser) {
+      return;
+    }
+
+    // lấy socket tại useAuthStore.js
+    const { socket } = useAuthStore.getState();
+
+    // lấy tin nhắn từ sender và set lại vào messages
+    socket.on("newMessage", (data) => {
+      // đứng ở phía người nhận tin, nếu tin nhán từ đúng senderId trùng với selectedUser thì mới render lại messages
+      if (data.senderId !== get().selectedUser._id) {
+        return;
+      }
+
+      set({ messages: [...get().messages, data] });
+    });
+  },
+
+  unsubscribeToNewMessage: () => {
+    const { socket } = useAuthStore.getState();
+    socket.off("newMessage");
+  },
 }));

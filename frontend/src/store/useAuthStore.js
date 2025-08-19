@@ -2,8 +2,11 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
 import { useChatStore } from "./useChatStore.js";
+import { io } from "socket.io-client";
 
-export const useAuthStore = create((set) => ({
+const BASE_URL = "http://localhost:5000";
+
+export const useAuthStore = create((set, get) => ({
   authUser: null,
 
   isSigningUp: false,
@@ -13,10 +16,14 @@ export const useAuthStore = create((set) => ({
 
   onlineUsers: [],
 
+  socket: null,
+
   checkAuth: async () => {
     try {
       const res = await axiosInstance.get("/auth/check");
       set({ authUser: res.data });
+
+      get().connectSocket();
     } catch (error) {
       console.log(error);
       set({ authUser: null });
@@ -32,6 +39,8 @@ export const useAuthStore = create((set) => ({
       set({ authUser: res.data });
 
       toast.success("Signup success");
+
+      get().connectSocket();
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
@@ -46,6 +55,8 @@ export const useAuthStore = create((set) => ({
       const res = await axiosInstance.post("/auth/login", data);
       set({ authUser: res.data });
       toast.success("Login success");
+
+      get().connectSocket();
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
@@ -63,6 +74,8 @@ export const useAuthStore = create((set) => ({
       useChatStore.getState().reset();
 
       toast.success("Logout success");
+
+      get().disconnectSocket();
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
@@ -80,6 +93,33 @@ export const useAuthStore = create((set) => ({
       toast.error(error.response.data.message);
     } finally {
       set({ isUpdating: false });
+    }
+  },
+
+  connectSocket: () => {
+    const { authUser, socket } = get();
+    if (!authUser || socket?.connected) {
+      return;
+    }
+
+    const newSocket = io(BASE_URL, {
+      query: {
+        userId: authUser._id,
+      },
+    });
+    set({ socket: newSocket });
+
+    // phải trùng "getOnlineUsers" vs bên BE
+    newSocket.on("getOnlineUsers", (data) => {
+      set({ onlineUsers: data });
+    });
+  },
+
+  disconnectSocket: () => {
+    const { socket } = get();
+    if (socket?.connected) {
+      socket.disconnect();
+      set({ socket: null });
     }
   },
 }));
