@@ -6,10 +6,12 @@ const ChatContainerInput = () => {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
-  const { sendMessage } = useChatStore();
+  const { sendMessage, isSendingMessage } = useChatStore();
 
   const handleImageUpload = () => {
-    fileInputRef.current.click(); // mở hộp chọn file
+    if (!isSendingMessage) {
+      fileInputRef.current.click(); // mở hộp chọn file
+    }
   };
 
   const handleFileChange = async (e) => {
@@ -25,13 +27,12 @@ const ChatContainerInput = () => {
 
   const removeImage = () => {
     setImagePreview(null);
-    // set image input value to null
     if (fileInputRef.current) fileInputRef.current.value = null;
   };
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!text.trim() && !imagePreview) return; // không gửi rỗng
+    if (!text.trim() && !imagePreview) return;
 
     await sendMessage({
       text,
@@ -59,6 +60,7 @@ const ChatContainerInput = () => {
             type="button"
             className="absolute top-1 right-1 bg-base-100 rounded-full p-1 shadow hover:bg-error hover:text-white"
             title="Remove image"
+            disabled={isSendingMessage}
           >
             <IoClose size={16} />
           </button>
@@ -73,6 +75,7 @@ const ChatContainerInput = () => {
           value={text}
           onChange={(e) => setText(e.target.value)}
           className="input input-bordered flex-1"
+          disabled={isSendingMessage}
         />
 
         {/* Nút chọn ảnh */}
@@ -81,6 +84,7 @@ const ChatContainerInput = () => {
           onClick={handleImageUpload}
           className="btn btn-ghost btn-circle hover:bg-base-300"
           title="Attach image"
+          disabled={isSendingMessage}
         >
           <IoImage size={20} />
         </button>
@@ -90,11 +94,20 @@ const ChatContainerInput = () => {
           ref={fileInputRef}
           onChange={handleFileChange}
           className="hidden"
+          disabled={isSendingMessage}
         />
 
         {/* Nút gửi */}
-        <button type="submit" className="btn btn-primary btn-circle">
-          <IoSend size={18} />
+        <button
+          type="submit"
+          className="btn btn-primary btn-circle"
+          disabled={isSendingMessage}
+        >
+          {isSendingMessage ? (
+            <span className="loading loading-spinner loading-sm"></span>
+          ) : (
+            <IoSend size={18} />
+          )}
         </button>
       </form>
     </div>
